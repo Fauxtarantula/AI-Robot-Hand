@@ -11,7 +11,6 @@ import time
 
 #initialize variables
 hand_track = mp.solutions.hands
-jt_arr = [[8,7,6],[12,11,10]]
 
 def hand_type(index, hands, results, ht, wd): #index = hand results(1,0) or left/right, hands = hand landmark, results = all detections
     
@@ -55,5 +54,5 @@ def get_finger_angle(image, results, jt_arr):
             #need to round off and convert value to sttring and display
             #converting the resolution to 640 x 480 
             cv2.putText(image, str(round(ang, 4)), tuple(np.multiply(jt_2, [640, 480]).astype(int)),
-                                   cv2.FONT_HERSHEY_COMPLEX, 0.5, (71,255,12),2,cv2.LINE_AA)
+                                   cv2.FONT_HERSHEY_COMPLEX, 0.5, (71,255,12),2,cv2.LINE_AA) #i shld prob use another rgb value than razers lmao
     return image
