@@ -34,8 +34,26 @@ def hand_type(index, hands, results, ht, wd): #index = hand results(1,0) or left
 
 def get_finger_angle(image, results, jt_arr):
     
-    for hand in results.multi_hand_landmarks:  #going through all hands
-        for jt in jt_arr: #going through all the joints in the joint array
+    for hand in results.multi_hand_landmarks:
+        
+        for jt in jt_arr:
             jt_1 = np.array([hand.landmark[jt[0]].x, hand.landmark[jt[0]].y]) #top joint coord
             jt_2 = np.array([hand.landmark[jt[1]].x, hand.landmark[jt[1]].y]) #middle joint coord
             jt_3 = np.array([hand.landmark[jt[2]].x, hand.landmark[jt[2]].y]) #bottom joint coord
+            
+            #Calculating kinematics of a hand using trigo
+            #getting radians of joint angles by inversing tan
+            #Converting radians to angles
+            rad = np.arctan2(jt_3[1]-jt_2[1], jt_3[0]-jt_2[0]) - np.arctan2(jt_1[1]-jt_2[1], jt_1[0]-jt_2[0])
+            ang = np.abs(rad*180.0/np.pi)
+            
+            #failsafe if goes beyond 180
+            
+            if ang > 180.0:
+                ang = 360-ang
+            
+            #need to round off and convert value to sttring and display
+            #converting the resolution to 640 x 480 
+            cv2.putText(image, str(round(ang, 4)), tuple(np.multiply(jt_2, [640, 480]).astype(int)),
+                                   cv2.FONT_HERSHEY_COMPLEX, 0.5, (71,255,12),2,cv2.LINE_AA)
+    return image
