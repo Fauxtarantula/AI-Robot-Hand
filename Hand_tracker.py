@@ -10,7 +10,7 @@ import mediapipe as mp
 import numpy as np
 import time
 
-from Hand_tracker_fun import hand_type
+from Hand_tracker_fun import hand_type, get_finger_angle
 from matplotlib import pyplot as plt
 
 #initialize variables
@@ -27,8 +27,15 @@ draw_hands = mp.solutions.drawing_utils
 #checking the dimensions of the video feed
 height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
 width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
-# print(height)
-# print(width)
+
+#2-d array of joint coordinates.
+jt_arr = [[8,7,6], [12,11,10], [16,15,14],[20,19,18], [4,3,2]]
+#all index are derive from the coordiate chart of mediapipe hand
+#row 1 are the joint coordinates of the index finger
+#row 2 are the joint coordinates of the middle finger
+#row 3 are the joint coordinates of the ring finger
+#row 4 are the joint coordinates of the pinky finger
+#row 5 are the joint coordinates of the thumb
 
 #keep playing when videocapture is on
 while vid.isOpened():
@@ -63,7 +70,9 @@ while vid.isOpened():
             if hand_type(i, hand_landmarks, results, height, width):
                 text, coord = hand_type(i, hand_landmarks, results, height, width)
                 cv2.putText(image, text, coord, cv2.FONT_HERSHEY_SIMPLEX,1, (255,255,255), 2, cv2.LINE_AA)
-            
+    
+        get_finger_angle(image, results, jt_arr)
+    
     cv2.imshow("Hand capture", image)
     #print(results.multi_hand_landmarks)
                
