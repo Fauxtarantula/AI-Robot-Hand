@@ -9,9 +9,15 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import time
+import serial
 
 from Hand_tracker_fun import hand_type, get_finger_angle
 from matplotlib import pyplot as plt
+
+
+
+#initialize the communication port
+ard_serial= Serial.serial('COM9',9600,1)
 
 #initialize variables
 vid = cv2.VideoCapture(0)
@@ -80,3 +86,11 @@ while vid.isOpened():
         break
 vid.release()
 cv2.destroyAllWindows()
+
+#initialize comm by sending H byte
+def sendBytes(){
+     if(ard_serial.isOpen):
+          ard_serial.write(b'H')
+
+}
+
