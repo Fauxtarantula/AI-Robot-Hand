@@ -11,31 +11,29 @@ import numpy as np
 import time
 import serial
 
-from Hand_tracker_fun import hand_type, get_finger_angle
+from Hand_tracker_fun import hand_type, get_finger_angle, send_data
 from matplotlib import pyplot as plt
-
-
-
-#initialize the communication port
-ard_serial= Serial.serial('COM9',9600,1)
 
 #initialize variables
 vid = cv2.VideoCapture(0)
 hand_track = mp.solutions.hands
 hands = hand_track.Hands(static_image_mode = False,
                    max_num_hands = 1,
-                   model_complexity = 1,
+                   model_complexity = 0,
                    min_detection_confidence = 0.5,
                    min_tracking_confidence = 0.5)
 
 draw_hands = mp.solutions.drawing_utils
+ard_serial = serial.Serial(port='COM9', baudrate=115200, timeout=.1)
 
 #checking the dimensions of the video feed
 height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
 width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
 
 #2-d array of joint coordinates.
-jt_arr = [[8,7,6], [12,11,10], [16,15,14],[20,19,18], [4,3,2]]
+#jt_arr = [[8,7,6], [12,11,10], [16,15,14],[20,19,18], [4,3,2]]
+jt_arr = [[8,7,6], [4,3,2]]
+store_arr =[]
 #all index are derive from the coordiate chart of mediapipe hand
 #row 1 are the joint coordinates of the index finger
 #row 2 are the joint coordinates of the middle finger
@@ -65,32 +63,21 @@ while vid.isOpened():
                                       hand_track.HAND_CONNECTIONS)
                                       # draw_hands.get_default_hand_landmarks_style(),
                                       # draw_hands.get_default_hand_connections_style())
-                                      
-            #extracting specific finger/hand classification
-            # for i in range(2):
-            #     print(f'{hand_track.HandLandmark(i).name}:') #name of landmark e.g thumb etc
-            #     print(f'{hand_landmarks.landmark[hand_track.HandLandmark(i).value]}')
-            #print(results.multi_handedness)
-            
             #To show left or right hand
             if hand_type(i, hand_landmarks, results, height, width):
                 text, coord = hand_type(i, hand_landmarks, results, height, width)
                 cv2.putText(image, text, coord, cv2.FONT_HERSHEY_SIMPLEX,1, (255,255,255), 2, cv2.LINE_AA)
     
-        get_finger_angle(image, results, jt_arr)
+        store_arr=get_finger_angle(image, results, jt_arr)
     
     cv2.imshow("Hand capture", image)
+    send_data(ard_serial, store_arr)
     #print(results.multi_hand_landmarks)
+    store_arr.clear()
                
     if cv2.waitKey(1) & 0xFF == ord("q"): #exit if q is pressed
         break
 vid.release()
 cv2.destroyAllWindows()
-
-#initialize comm by sending H byte
-def sendBytes(){
-     if(ard_serial.isOpen):
-          ard_serial.write(b'H')
-
-}
+            
 
