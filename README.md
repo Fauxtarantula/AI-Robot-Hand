@@ -12,8 +12,11 @@ Based on the finger points, i can get the finger angle of each finger by setting
 
 ### Software
 Pick out individual movements of finger - done
+
 Kinematic calculations of fingers - done
+
 need to communicate between computer and arduino - done
+
 translate string data to a bytes object as arduino reads byte objects - done
 
 ### Hardware
