@@ -10,14 +10,12 @@ pip install mediapipe
 Based on the finger points, i can get the finger angle of each finger by setting the 3 points, top, middle and bottom of the hand and calculate angle
 ## Current task
 
-##Software
-
+### Software
 Pick out individual movements of finger - done
 Kinematic calculations of fingers - done
 need to communicate between computer and arduino - done
 translate string data to a bytes object as arduino reads byte objects - done
 
-##Hardware
-
+### Hardware
 create an arm - Bruh:skull:
 
