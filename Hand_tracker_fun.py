@@ -15,9 +15,16 @@ hand_track = mp.solutions.hands
 store = []
 
 def send_data(ard, data_arr):
+    store1 = ""
     for x in data_arr:
-        ard.write(bytes(x, 'utf-8'))
-        time.sleep(0.05)
+        if int(x) >130:
+            store1 += "1"
+        else:
+            store1 += "0"
+
+    ard.write(bytes(store1,'utf-8'))
+#        ard.write(bytes(x, 'utf-8'))
+#        time.sleep(0.05)
     
 
 def hand_type(index, hands, results, ht, wd): #index = hand results(1,0) or left/right, hands = hand landmark, results = all detections
