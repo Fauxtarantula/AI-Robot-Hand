@@ -72,6 +72,7 @@ while vid.isOpened():
     
     cv2.imshow("Hand capture", image)
     send_data(ard_serial, store_arr)
+    print(ard_serial.readline())
     #print(results.multi_hand_landmarks)
     store_arr.clear()
                
